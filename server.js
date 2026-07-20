@@ -270,6 +270,58 @@ app.get("/my-orders", (req, res) => {
 
 });
 
+// ===== Admin Dashboard (Basic Auth দিয়ে সুরক্ষিত) =====
+function requireAdmin(req, res, next) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Basic ")) {
+        res.set("WWW-Authenticate", 'Basic realm="Admin Area"');
+        return res.status(401).send("Authentication required");
+    }
+
+    const base64Credentials = authHeader.split(" ")[1];
+    const credentials = Buffer.from(base64Credentials, "base64").toString("utf8");
+    const [user, pass] = credentials.split(":");
+
+    const adminUser = process.env.ADMIN_USER || "admin";
+    const adminPass = process.env.ADMIN_PASS || "changeme";
+
+    if (user === adminUser && pass === adminPass) {
+        return next();
+    }
+
+    res.set("WWW-Authenticate", 'Basic realm="Admin Area"');
+    return res.status(401).send("Invalid credentials");
+}
+
+// ===== admin.css, admin.js সার্ভ করার জন্য (password protected) =====
+app.use("/admin", requireAdmin, express.static(path.join(__dirname, "admin")));
+
+app.get("/admin", requireAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, "admin", "admin.html"));
+});
+
+app.get("/admin/data", requireAdmin, (req, res) => {
+    const data = {};
+
+    db.query("SELECT id, name, email, created_at FROM users ORDER BY created_at DESC", (err, users) => {
+        if (err) return res.json({ success: false, message: "সার্ভারে সমস্যা হয়েছে" });
+        data.users = users;
+
+        db.query("SELECT * FROM orders ORDER BY created_at DESC", (err, orders) => {
+            if (err) return res.json({ success: false, message: "সার্ভারে সমস্যা হয়েছে" });
+            data.orders = orders;
+
+            db.query("SELECT * FROM complaints ORDER BY created_at DESC", (err, complaints) => {
+                if (err) return res.json({ success: false, message: "সার্ভারে সমস্যা হয়েছে" });
+                data.complaints = complaints;
+
+                res.json({ success: true, ...data });
+            });
+        });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 Server Running: http://localhost:${PORT}`);
 });
