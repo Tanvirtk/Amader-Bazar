@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>আমাদের বাজার — পণ্য তালিকা</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Home.css">
+</head>
+<body>
+
+<!-- ===== Header (fixed) ===== -->
+<header class="site-header" id="site-header">
+  <div class="header-row">
+    <div class="brand">
+      <div class="brand-mark">বা</div>
+      <div>
+    আমাদের বাজার
+        <small>তাজা পণ্য, সৎ দাম</small>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <span aria-hidden="true">🔍</span>
+      <input id="search-input" type="text" placeholder="পণ্য খুঁজুন...">
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn cart" id="open-cart-btn">
+        <span aria-hidden="true">🛒</span><span class="label">কার্ট</span>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+      <button class="icon-btn report" id="open-complaint-btn">
+        <span aria-hidden="true">⚠️</span><span class="label">অভিযোগ</span>
+      </button>
+      <button class="icon-btn logout" id="logout-btn">
+        <span aria-hidden="true">🚪</span><span class="label">লগআউট</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Category bar (fixed, glued directly under header) ===== -->
+<div class="category-bar-wrap fade-edges" id="category-bar-wrap">
+  <nav class="category-bar" id="category-bar" aria-label="পণ্যের বিভাগ"></nav>
+</div>
+
+<!-- ===== Spacer so content doesn't hide under fixed header+bar ===== -->
+<div id="fixed-spacer"></div>
+
+<!-- ===== Main content ===== -->
+<main>
+  <div class="page-title">
+    <h1>আজকের পণ্য তালিকা</h1>
+    <span><span id="result-count">0</span>টি পণ্য পাওয়া গেছে</span>
+  </div>
+
+  <div class="grid" id="product-grid"></div>
+  <div class="empty-state" id="empty-state" style="display:none;">
+    <div class="big">🧺</div>
+    <p>কোনো পণ্য পাওয়া যায়নি। অন্য বিভাগ বা শব্দ দিয়ে খুঁজে দেখুন।</p>
+  </div>
+</main>
+
+<footer>© ২০২৬ আমার বাজার — সকল অধিকার সংরক্ষিত</footer>
+
+<!-- ===== Complaint (অভিযোগ) Modal ===== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <div>
+        <h2 id="modal-title">অভিযোগ জানান</h2>
+        <p>আপনার অর্ডার বা প্রোডাক্ট নিয়ে কোনো সমস্যা হলে এখানে জানান।</p>
+      </div>
+      <button class="modal-close" id="modal-close-btn" aria-label="বন্ধ করুন">✕</button>
+    </div>
+
+    <form class="report-form" id="report-form">
+      <div class="field">
+        <label for="product-name">প্রোডাক্টের নাম</label>
+        <input type="text" id="product-name" placeholder="যেমন: ইলিশ মাছ" required>
+      </div>
+
+      <div class="field">
+        <label for="complaint-type">অভিযোগের ধরন</label>
+        <select id="complaint-type" required>
+          <option value="" disabled selected>একটি অপশন বেছে নিন</option>
+          <option value="ভুল প্রোডাক্ট পাঠানো হয়েছে">ভুল প্রোডাক্ট পাঠানো হয়েছে</option>
+          <option value="দেরিতে ডেলিভারি">দেরিতে ডেলিভারি</option>
+          <option value="মানের সমস্যা / নষ্ট প্রোডাক্ট">মানের সমস্যা / নষ্ট প্রোডাক্ট</option>
+          <option value="বেশি টাকা কাটা হয়েছে">বেশি টাকা কাটা হয়েছে</option>
+          <option value="প্রোডাক্ট পাইনি">প্রোডাক্ট পাইনি</option>
+          <option value="অন্যান্য">অন্যান্য</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="complaint-desc">অভিযোগের বিবরণ</label>
+        <textarea id="complaint-desc" rows="3" placeholder="কী ঘটেছে বিস্তারিত লিখুন..." required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="evidence-upload">প্রমাণ হিসেবে ছবি আপলোড করুন <span class="hint">(ঐচ্ছিক)</span></label>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="evidence-upload" accept="image/*">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text"><b>ছবি বেছে নিন</b> অথবা এখানে টেনে আনুন</div>
+        </div>
+        <div id="preview-wrap">
+          <img id="preview-img" src="" alt="আপলোডকৃত ছবির প্রিভিউ">
+          <button type="button" class="remove-img" id="remove-img-btn">সরিয়ে ফেলুন</button>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">অভিযোগ জমা দিন</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===== Cart (কার্ট) Modal ===== -->
+<div class="modal-overlay" id="cart-modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cart-modal-title">
+    <div class="modal-head">
+      <div>
+        <h2 id="cart-modal-title">আপনার কার্ট</h2>
+        <p>একাধিক প্রোডাক্ট বেছে একসাথে অর্ডার করুন</p>
+      </div>
+      <button class="modal-close" id="cart-modal-close-btn" aria-label="বন্ধ করুন">✕</button>
+    </div>
+
+    <div id="cart-items-wrap"></div>
+
+    <div id="cart-empty-msg" style="padding:20px 24px; color:var(--ink-soft); text-align:center; display:none;">
+      কার্ট খালি — প্রোডাক্ট কার্ডে "কার্টে যোগ করুন" চাপুন
+    </div>
+
+    <div style="padding:14px 24px 24px;">
+      <button type="button" class="submit-btn" id="checkout-btn">চেকআউট করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Checkout (ডেলিভারি তথ্য) Modal ===== -->
+<div class="modal-overlay" id="order-modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+    <div class="modal-head">
+      <div>
+        <h2 id="order-modal-title">ডেলিভারি তথ্য দিন</h2>
+        <p id="order-product-summary">কার্টের সব প্রোডাক্ট একসাথে অর্ডার হবে</p>
+      </div>
+      <button class="modal-close" id="order-modal-close-btn" aria-label="বন্ধ করুন">✕</button>
+    </div>
+
+    <form class="report-form" id="order-form">
+      <div class="field">
+        <label for="order-address">ডেলিভারি ঠিকানা</label>
+        <input type="text" id="order-address" placeholder="যেমন: বাসা ১২, রোড ৫, মিরপুর, ঢাকা" required>
+      </div>
+
+      <div class="field">
+        <label for="order-phone">ফোন নম্বর</label>
+        <input type="text" id="order-phone" placeholder="যেমন: ০১৭xxxxxxxx" required>
+      </div>
+
+      <div class="field">
+        <label for="order-note">বিশেষ নোট <span class="hint">(ঐচ্ছিক)</span></label>
+        <textarea id="order-note" rows="2" placeholder="কোনো বিশেষ নির্দেশনা থাকলে লিখুন..."></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">অর্ডার কনফার্ম করুন</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

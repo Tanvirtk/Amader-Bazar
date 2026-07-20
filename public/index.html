@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>আজকের বাজার — Login / Signup</title>
+
+<!-- Google Fonts: display এর জন্য serif, body এর জন্য sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ============ বাম ব্র্যান্ড প্যানেল ============ -->
+  <div class="brand-panel">
+    <div class="brand-mark"><span class="dot"></span> আজকের বাজার</div>
+
+    <div class="brand-copy">
+      <h1>বাজারের <em>আজকের দাম</em>, হাতের কাছে।</h1>
+      <p>চাল, ডাল, সবজি, মাছ-মাংস — প্রতিদিনের বাজারদর দেখো এক জায়গায়। যেকোনো সময়, যেকোনো জায়গা থেকে।</p>
+    </div>
+
+    <div class="brand-foot">
+      <span>© ২০২৬ আজকের বাজার</span>
+      <span>Privacy</span>
+      <span>Terms</span>
+    </div>
+  </div>
+
+  <!-- ============ ডান অথ প্যানেল ============ -->
+  <div class="auth-panel">
+    <div class="auth-card">
+
+      <!-- ট্যাব সুইচার -->
+      <div class="tabs" id="tabs">
+        <div class="tab-indicator"></div>
+        <button type="button" class="tab-btn active" id="tabLoginBtn">লগইন</button>
+        <button type="button" class="tab-btn" id="tabSignupBtn">সাইনআপ</button>
+      </div>
+
+      <!-- ---------------- LOGIN ফর্ম ---------------- -->
+      <div class="form-panel active" id="loginPanel">
+        <div class="form-head">
+          <h2>আবার স্বাগতম</h2>
+          <p>তোমার অ্যাকাউন্টে লগইন করো</p>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <div class="field" id="loginEmailField">
+            <label for="loginEmail">ইমেইল</label>
+            <input type="email" id="loginEmail" name="email" placeholder="you@example.com" required>
+            <small class="error">সঠিক ইমেইল দাও</small>
+          </div>
+
+          <div class="field" id="loginPassField">
+            <label for="loginPassword">পাসওয়ার্ড</label>
+            <input type="password" id="loginPassword" name="password" placeholder="••••••••" required>
+            <small class="error">পাসওয়ার্ড কমপক্ষে ৬ ক্যারেক্টার হতে হবে</small>
+          </div>
+
+          <div class="form-row-between">
+            <label class="checkbox-line">
+              <input type="checkbox" id="rememberMe"> মনে রাখো
+            </label>
+            <a href="#">পাসওয়ার্ড ভুলে গেছো?</a>
+          </div>
+
+          <button type="submit" class="submit-btn">লগইন করো</button>
+          <div class="status-msg" id="loginStatus"></div>
+        </form>
+
+        <div class="switch-line">
+          অ্যাকাউন্ট নেই? <button type="button" id="goSignup">সাইনআপ করো</button>
+        </div>
+      </div>
+
+      <!-- ---------------- SIGNUP ফর্ম ---------------- -->
+      <div class="form-panel" id="signupPanel">
+        <div class="form-head">
+          <h2>অ্যাকাউন্ট তৈরি করো</h2>
+          <p>শুরু করতে কয়েক সেকেন্ড লাগবে</p>
+        </div>
+
+        <form id="signupForm" novalidate>
+          <div class="field" id="signupNameField">
+            <label for="signupName">নাম</label>
+            <input type="text" id="signupName" name="name" placeholder="তোমার পুরো নাম" required>
+            <small class="error">নাম দিতে হবে</small>
+          </div>
+
+          <div class="field" id="signupEmailField">
+            <label for="signupEmail">ইমেইল</label>
+            <input type="email" id="signupEmail" name="email" placeholder="you@example.com" required>
+            <small class="error">সঠিক ইমেইল দাও</small>
+          </div>
+
+          <div class="field" id="signupPassField">
+            <label for="signupPassword">পাসওয়ার্ড</label>
+            <input type="password" id="signupPassword" name="password" placeholder="কমপক্ষে ৬ ক্যারেক্টার" required>
+            <small class="error">পাসওয়ার্ড কমপক্ষে ৬ ক্যারেক্টার হতে হবে</small>
+          </div>
+
+          <div class="form-row-between">
+            <label class="checkbox-line">
+              <input type="checkbox" id="agreeTerms" required> আমি Terms এ agree করলাম
+            </label>
+          </div>
+
+          <button type="submit" class="submit-btn">অ্যাকাউন্ট তৈরি করো</button>
+          <div class="status-msg" id="signupStatus"></div>
+        </form>
+
+        <div class="switch-line">
+          অ্যাকাউন্ট আছে? <button type="button" id="goLogin">লগইন করো</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<script src="auth.js"></script>
+</body>
+</html>
