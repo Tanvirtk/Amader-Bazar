@@ -34,13 +34,13 @@ const products = [
 
 { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMopI3vMCVnlTQ_lyRE0n_FuoIpRbD_kWP6iczzRFr9A&s=10", name:"রসুন", category:"সবজি", price:"৳180 / kg", market:"Kawran Bazar" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt2OEcCA6spPRDJim2HsoBH8MjYka-h25FjKC2QbUliQ&s=10", name:"আদা", category:"সবজি", price:"৳280 / kg", market:"Kawran Bazar" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt2OEcCA6spPRDJim2HsoBH8MjYka-h25FjKC2QbUliQ&s=10", name:"আদা", category:"সবজি", price:"৳240 / 1/2 kg", market:"Kawran Bazar" },
 
 { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDGHg5B1kDfWx0D2QUcRGxKQ-QGVY462h07hBXj1bOTb1jCDMZcAN85vgz&s=10", name:"করলা", category:"সবজি", price:"৳90 / kg", market:"Kawran Bazar" },
 
 { img:"https://m.media-amazon.com/images/I/51M3fy0bZAL._AC_UF1000,1000_QL80_.jpg", name:"শসা", category:"সবজি", price:"৳70 / kg", market:"Kawran Bazar" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDHbQhfxcivvRh8TjUYVgFIBV7r8mWIzuHehKJHzUg-w&s=10", name:"ঢেঁড়স", category:"সবজি", price:"৳100 / kg", market:"Kawran Bazar" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDHbQhfxcivvRh8TjUYVgFIBV7r8mWIzuHehKJHzUg-w&s=10", name:"ঢেঁড়স", category:"সবজি", price:"৳80 / kg", market:"Kawran Bazar" },
 
 { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgKOR5uNGTd65ReyHnJz7LEAqQFQeE6wLuKhnMMy3cuw&s=10", name:"লাউ", category:"সবজি", price:"৳80 / পিস", market:"Kawran Bazar" },
   { img:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&q=80", name:"আলু", category:"সবজি", price:"৳35 / kg", market:"Local Bazar" },
@@ -62,27 +62,27 @@ const products = [
   { img:"https://www.dailyfoodshop.com/wp-content/uploads/2020/04/beef-gorur-mangso-meat.jpg", name:"গরুর মাংস", category:"মাংস", price:"৳750 / kg", market:"Meat Market" },
   { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVWMDJ4mdX3zaPnmrluKlQ8m_FrODnTvuxaqwSovp2yg&s=10", name:"খাসির মাংস", category:"মাংস", price:"৳1100 / kg", market:"Meat Market" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDz3sJCbvKt-hsyouyxORFtyTgRR-kQTFzL804LZrDz8VBYqfv4AEJCmkX&s=10", name:"দেশি মুরগি", category:"মাংস", price:"৳650 / kg", market:"Meat Market" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDz3sJCbvKt-hsyouyxORFtyTgRR-kQTFzL804LZrDz8VBYqfv4AEJCmkX&s=10", name:"দেশি মুরগি", category:"মাংস", price:"৳450 / পিস", market:"Meat Market" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalVHU5gP0uuWDcThLihsfrFO7hLy3k0c4bEx7TfYckA&s=10", name:"হাঁসের মাংস", category:"মাংস", price:"৳700 / kg", market:"Meat Market" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalVHU5gP0uuWDcThLihsfrFO7hLy3k0c4bEx7TfYckA&s=10", name:"হাঁসের মাংস", category:"মাংস", price:"৳500 / পিস", market:"Meat Market" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0ZllBQ42kR4t2V4CRFOQTwWH98gkv7J_J4oaFBzXClA&s=10", name:"কবুতরের মাংস", category:"মাংস", price:"৳900 / জোড়া", market:"Meat Market" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0ZllBQ42kR4t2V4CRFOQTwWH98gkv7J_J4oaFBzXClA&s=10", name:"কবুতরের মাংস", category:"মাংস", price:"৳600 / জোড়া", market:"Meat Market" },
   { img:"https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400&q=80", name:"মুরগির মাংস", category:"মাংস", price:"৳220 / kg", market:"Meat Market" },
-  { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJZEdYnhkdWm2fqSbK1Cx1ipnLHt4fhtZ4VACcwVXfkGmaI3shZiebBa7I&s=10", name:"হলুদ গুঁড়া", category:"মসলা", price:"৳600 / kg", market:"Spice Corner" },
- { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSziVSSBuxJw57mleHjLb0J6sAYmJ8MSKOD77gr3kAFA&s=10", name:"মরিচ গুঁড়া", category:"মসলা", price:"৳700 / kg", market:"Spice Corner" },
+  { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJZEdYnhkdWm2fqSbK1Cx1ipnLHt4fhtZ4VACcwVXfkGmaI3shZiebBa7I&s=10", name:"হলুদ গুঁড়া", category:"মসলা", price:"৳150 / 250 g", market:"Spice Corner" },
+ { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSziVSSBuxJw57mleHjLb0J6sAYmJ8MSKOD77gr3kAFA&s=10", name:"মরিচ গুঁড়া", category:"মসলা", price:"৳150 / 250 g", market:"Spice Corner" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpiQe_MfHXvPOtBbwMqTLxw26JrI2uZ_nJ1cwEIMsloQ&s=10", name:"জিরা গুঁড়া", category:"মসলা", price:"৳900 / kg", market:"Spice Corner" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpiQe_MfHXvPOtBbwMqTLxw26JrI2uZ_nJ1cwEIMsloQ&s=10", name:"জিরা গুঁড়া", category:"মসলা", price:"৳350 / 250 g", market:"Spice Corner" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNXEwjn78yMj9OjarXL1hPOr1ItRgN4Y7UvVWRbHt2VA&s=10", name:"ধনিয়া গুঁড়া", category:"মসলা", price:"৳550 / kg", market:"Spice Corner" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNXEwjn78yMj9OjarXL1hPOr1ItRgN4Y7UvVWRbHt2VA&s=10", name:"ধনিয়া গুঁড়া", category:"মসলা", price:"৳150 / 250 g", market:"Spice Corner" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHtOTV9qhu-vJ3mkZtjkeWNQG18sXFGTApC46c3V-bAg&s=10", name:"গরম মসলা", category:"মসলা", price:"৳1200 / kg", market:"Spice Corner" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHtOTV9qhu-vJ3mkZtjkeWNQG18sXFGTApC46c3V-bAg&s=10", name:"গরম মসলা", category:"মসলা", price:"৳200 / 250 g", market:"Spice Corner" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzEfGLTtRF91R_5N7tX2evNLJRWst9YTejvgEHDS9jJA&s=10", name:"গোলমরিচ গুঁড়া", category:"মসলা", price:"৳1800 / kg", market:"Spice Corner" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzEfGLTtRF91R_5N7tX2evNLJRWst9YTejvgEHDS9jJA&s=10", name:"গোলমরিচ গুঁড়া", category:"মসলা", price:"৳180 / 250 g", market:"Spice Corner" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoyg7T40RfjCCdZewrSFHMteoGuIgxAeGcNqVAPSFW2Q&s=10", name:"দারুচিনি", category:"মসলা", price:"৳1400 / kg", market:"Spice Corner" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoyg7T40RfjCCdZewrSFHMteoGuIgxAeGcNqVAPSFW2Q&s=10", name:"দারুচিনি", category:"মসলা", price:"৳230 / 150 g", market:"Spice Corner" },
 
-{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRosP_YJzVvmW45YnUcifikWTzmrBPaOvQb3qdiSxjCKA&s=10", name:"এলাচ", category:"মসলা", price:"৳3500 / kg", market:"Spice Corner" },
-  { img:"https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80", name:"দুধ", category:"দুগ্ধজাত", price:"৳90 / litre", market:"Dairy Shop" },
+{ img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRosP_YJzVvmW45YnUcifikWTzmrBPaOvQb3qdiSxjCKA&s=10", name:"এলাচ", category:"মসলা", price:"৳350 / 100 g", market:"Spice Corner" },
+  { img:"https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80", name:"দুধ", category:"দুগ্ধজাত", price:"৳190 / 2 litre", market:"Dairy Shop" },
   { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTieqBpi-xB4FT0gTPmfZav8aXfUByULMQ9iIaNsig3kdQgSyhF6JLeaA0&s=10", name:"পাঙ্গাশ ", category:"মাছ", price:"৳170 / kg", market:"Fish Market" },
  { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRNKHVaGBAQ00jcfnsi1bUhZoL6yefEGYzUQXivoaLhQ&s", name:"সাদা ডিম", category:"ডিম", price:"৳130 / dozen", market:"Local Bazar" },
 
@@ -121,11 +121,15 @@ const products = [
 { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_WJAot1L2eySc_ZBQrhhLnMv1ihl0opHwN_sQagr6dA&s", name:"সুজি", category:"মুদি", price:"৳75 / kg", market:"Grocery Store" },
 
 { img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCwjGhzVa2HEHnnJ2u7ykX5SYzNFZP3zEOvK_oXFDX2HxdHKRHQAXlRAE&s=10", name:"গুঁড়া দুধ", category:"মুদি", price:"৳850 / kg", market:"Grocery Store" },
+
+
   // ===== এভাবে নতুন { } অবজেক্ট বসিয়ে যেকোনো category-তে আরও প্রোডাক্ট যোগ করুন =====
 ];
+  // ===== এভাবে নতুন { } অবজেক্ট বসিয়ে যেকোনো category-তে আরও প্রোডাক্ট যোগ করুন =====
 
 
-const categories = ["সব", "ফল", "সবজি", "মাছ", "মাংস", "মসলা", "দুগ্ধজাত", "ডিম", "মুদি"];
+
+const categories = ["সব","ফল", "সবজি", "মাছ", "মাংস", "মসলা", "দুগ্ধজাত", "ডিম", "মুদি"];
  
 let activeCategory = "সব";
 let searchTerm = "";
