@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const db = require("./config/db");
 const bcrypt = require("bcryptjs");
+const sendTelegramNotification = require("./telegram");
 require("dotenv").config();
 
 const app = express();
@@ -177,6 +178,12 @@ app.post("/complaints", upload.single("image"), (req, res) => {
             console.log(err);
             return res.json({ success: false, message: "সার্ভারে সমস্যা হয়েছে" });
         }
+
+        // ===== Telegram এ notification পাঠানো =====
+        sendTelegramNotification(
+            `⚠️ <b>নতুন অভিযোগ!</b>\nProduct: ${productName}\nType: ${complaintType}\nDescription: ${description}`
+        );
+
         res.json({ success: true, message: "অভিযোগ সফলভাবে জমা হয়েছে" });
     });
 
@@ -218,6 +225,15 @@ app.post("/orders/bulk", (req, res) => {
                     if (hasError) {
                         return res.json({ success: false, message: "কিছু প্রোডাক্ট অর্ডার করতে সমস্যা হয়েছে" });
                     }
+
+                    // ===== Telegram এ notification পাঠানো =====
+                    const itemList = items
+                        .map((i) => `- ${i.name} (x${i.quantity || 1})`)
+                        .join("\n");
+                    sendTelegramNotification(
+                        `🛒 <b>নতুন অর্ডার (Bulk)!</b>\n${itemList}\nAddress: ${deliveryAddress}\nPhone: ${phone}`
+                    );
+
                     res.json({ success: true, message: "সব প্রোডাক্টের অর্ডার সফলভাবে জমা হয়েছে", orderGroup });
                 }
             }
@@ -246,6 +262,12 @@ app.post("/orders", (req, res) => {
             console.log(err);
             return res.json({ success: false, message: "সার্ভারে সমস্যা হয়েছে" });
         }
+
+        // ===== Telegram এ notification পাঠানো =====
+        sendTelegramNotification(
+            `🛒 <b>নতুন অর্ডার!</b>\nProduct: ${productName}\nQty: ${qty}\nAddress: ${deliveryAddress}\nPhone: ${phone}`
+        );
+
         res.json({ success: true, message: "অর্ডার সফলভাবে জমা হয়েছে", orderId: result.insertId });
     });
 
