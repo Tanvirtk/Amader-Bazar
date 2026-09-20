@@ -5,8 +5,19 @@ const path = require("path");
 const fs = require("fs");
 const db = require("./config/db");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const sendTelegramNotification = require("./telegram");
 require("dotenv").config();
+// ===== Password Reset Email System =====
+
+const mailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Render নিজে PORT ঠিক করে দেয়, তাই env থেকে নেওয়া হচ্ছে
@@ -64,12 +75,13 @@ app.post("/signup", async (req, res) => {
 
         db.query(sql, [name, email, hashedPassword], (err, result) => {
 
-            if (err) {
-                return res.json({
-                    success: false,
-                    message: "Email already exists!"
-                });
-            }
+           if (err) {
+    console.log("SIGNUP DATABASE ERROR:", err);
+    return res.json({
+        success: false,
+        message: "Database Error!"
+    });
+}
 
             res.json({
                 success: true,
@@ -137,6 +149,253 @@ app.post("/login", (req, res) => {
     });
 
 });
+// =======================================================
+// FORGOT PASSWORD - SEND OTP
+// =======================================================
+
+app.post("/forgot-password", (req, res) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+        return res.json({
+            success: false,
+            message: "Email দিন"
+        });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    // User আছে কিনা check
+    db.query(
+        "SELECT id, name, email FROM users WHERE email = ?",
+        [cleanEmail],
+        async (err, result) => {
+
+            if (err) {
+                console.log(err);
+
+                return res.json({
+                    success: false,
+                    message: "Database Error!"
+                });
+            }
+
+            if (result.length === 0) {
+                return res.json({
+                    success: false,
+                    message: "এই email দিয়ে কোনো account পাওয়া যায়নি"
+                });
+            }
+
+            // 6 digit OTP
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+            // OTP hash
+            const otpHash = await bcrypt.hash(otp, 10);
+
+            // OTP 10 মিনিট valid
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+            // পুরোনো OTP delete
+            db.query(
+                "DELETE FROM password_resets WHERE email = ?",
+                [cleanEmail],
+                (deleteErr) => {
+
+                    if (deleteErr) {
+                        console.log(deleteErr);
+
+                        return res.json({
+                            success: false,
+                            message: "OTP তৈরি করতে সমস্যা হয়েছে"
+                        });
+                    }
+
+                    // নতুন OTP save
+                    db.query(
+                        "INSERT INTO password_resets (email, otp_hash, expires_at) VALUES (?, ?, ?)",
+                        [cleanEmail, otpHash, expiresAt],
+                        async (insertErr) => {
+
+                            if (insertErr) {
+                                console.log(insertErr);
+
+                                return res.json({
+                                    success: false,
+                                    message: "OTP save করতে সমস্যা হয়েছে"
+                                });
+                            }
+
+                            try {
+
+                                await mailTransporter.sendMail({
+                                    from: `"আমাদের বাজার" <${process.env.EMAIL_USER}>`,
+                                    to: cleanEmail,
+                                    subject: "আমাদের বাজার - Password Reset OTP",
+                                    html: `
+                                        <div style="font-family: Arial, sans-serif; padding: 20px;">
+                                            <h2>আমাদের বাজার</h2>
+
+                                            <p>আপনার password reset করার জন্য OTP:</p>
+
+                                            <div style="
+                                                font-size: 32px;
+                                                font-weight: bold;
+                                                letter-spacing: 8px;
+                                                margin: 20px 0;
+                                            ">
+                                                ${otp}
+                                            </div>
+
+                                            <p>
+                                                এই OTP <strong>10 মিনিট</strong> পর্যন্ত valid থাকবে।
+                                            </p>
+
+                                            <p>
+                                                আপনি যদি password reset request না করে থাকেন,
+                                                তাহলে এই email ignore করুন।
+                                            </p>
+                                        </div>
+                                    `
+                                });
+
+                                res.json({
+                                    success: true,
+                                    message: "OTP আপনার email-এ পাঠানো হয়েছে"
+                                });
+
+                            } catch (emailError) {
+
+                                console.log("Email Error:", emailError);
+
+                                // Email না গেলে OTP record delete
+                                db.query(
+                                    "DELETE FROM password_resets WHERE email = ?",
+                                    [cleanEmail]
+                                );
+
+                                res.json({
+                                    success: false,
+                                    message: "Email পাঠানো যায়নি"
+                                });
+                            }
+                        }
+                    );
+                }
+            );
+        }
+    );
+});
+
+
+// =======================================================
+// RESET PASSWORD - VERIFY OTP + UPDATE PASSWORD
+// =======================================================
+
+app.post("/reset-password", (req, res) => {
+
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+        return res.json({
+            success: false,
+            message: "সব তথ্য পূরণ করুন"
+        });
+    }
+
+    if (newPassword.length < 6) {
+        return res.json({
+            success: false,
+            message: "Password কমপক্ষে ৬ character হতে হবে"
+        });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    db.query(
+        "SELECT * FROM password_resets WHERE email = ? ORDER BY created_at DESC LIMIT 1",
+        [cleanEmail],
+        async (err, result) => {
+
+            if (err) {
+                console.log(err);
+
+                return res.json({
+                    success: false,
+                    message: "Database Error!"
+                });
+            }
+
+            if (result.length === 0) {
+                return res.json({
+                    success: false,
+                    message: "OTP পাওয়া যায়নি অথবা নতুন OTP নিন"
+                });
+            }
+
+            const resetData = result[0];
+
+            // OTP expired কিনা
+            if (new Date(resetData.expires_at) < new Date()) {
+
+                db.query(
+                    "DELETE FROM password_resets WHERE id = ?",
+                    [resetData.id]
+                );
+
+                return res.json({
+                    success: false,
+                    message: "OTP-এর সময় শেষ হয়ে গেছে"
+                });
+            }
+
+            // OTP check
+            const otpMatch = await bcrypt.compare(
+                otp.toString(),
+                resetData.otp_hash
+            );
+
+            if (!otpMatch) {
+                return res.json({
+                    success: false,
+                    message: "ভুল OTP"
+                });
+            }
+
+            // নতুন password hash
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Password update
+            db.query(
+                "UPDATE users SET password = ? WHERE email = ?",
+                [hashedPassword, cleanEmail],
+                (updateErr) => {
+
+                    if (updateErr) {
+                        console.log(updateErr);
+
+                        return res.json({
+                            success: false,
+                            message: "Password update করতে সমস্যা হয়েছে"
+                        });
+                    }
+
+                    // OTP একবার ব্যবহার হওয়ার পর delete
+                    db.query(
+                        "DELETE FROM password_resets WHERE email = ?",
+                        [cleanEmail]
+                    );
+
+                    res.json({
+                        success: true,
+                        message: "Password successfully changed"
+                    });
+                }
+            );
+        }
+    );
+});
 
 // ===== Logout =====
 app.post("/logout", (req, res) => {
@@ -147,6 +406,23 @@ app.post("/logout", (req, res) => {
         res.clearCookie("connect.sid");
         res.json({ success: true, message: "লগআউট সফল হয়েছে" });
     });
+});
+// ===== Logged-in User Profile =====
+app.get("/profile", (req, res) => {
+
+    if (!req.session.user) {
+        return res.status(401).json({
+            success: false,
+            message: "লগইন করা নেই"
+        });
+    }
+
+    res.json({
+        success: true,
+        name: req.session.user.name,
+        email: req.session.user.email
+    });
+
 });
 
 // ===== Session আছে কিনা চেক করার জন্য =====
@@ -345,5 +621,5 @@ app.get("/admin/data", requireAdmin, (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server Running: http://localhost:${PORT}`);
+    console.log(`🚀 Server is Running: http://localhost:${PORT}`);
 });
