@@ -6,24 +6,73 @@ const fs = require("fs");
 const db = require("./config/db");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
 const sendTelegramNotification = require("./telegram");
 require("dotenv").config();
-// ===== Password Reset Email System =====
 
-const mailTransporter = nodemailer.createTransport({
-   host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    family: 4,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 15000
-});
+
+
+
+// =======================================================
+// Password Reset Email — Brevo HTTP API ব্যবহার করা হচ্ছে
+// (Gmail SMTP নয়, কারণ Render Free Plan এ SMTP পোর্ট ব্লক করা থাকে,
+//  কিন্তু HTTPS/443 সবসময় খোলা থাকে বলে Brevo এখানে কাজ করবে)
+// .env / Render Environment এ BREVO_API_KEY আর BREVO_SENDER_EMAIL বসাতে হবে
+// =======================================================
+async function sendOtpEmail(toEmail, otp) {
+
+    console.log("Brevo key exists:", !!process.env.BREVO_API_KEY);
+    console.log("Brevo key starts with:", process.env.BREVO_API_KEY?.substring(0, 8));
+    console.log("Brevo sender:", process.env.BREVO_SENDER_EMAIL);
+
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+            "accept": "application/json",
+            "api-key": process.env.BREVO_API_KEY,
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            sender: {
+                name: "আমাদের বাজার",
+                email: process.env.BREVO_SENDER_EMAIL
+            },
+            to: [{ email: toEmail }],
+            subject: "আমাদের বাজার - Password Reset OTP",
+            htmlContent: `
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>আমাদের বাজার</h2>
+
+                    <p>আপনার password reset করার জন্য OTP:</p>
+
+                    <div style="
+                        font-size: 32px;
+                        font-weight: bold;
+                        letter-spacing: 8px;
+                        margin: 20px 0;
+                    ">
+                        ${otp}
+                    </div>
+
+                    <p>
+                        এই OTP <strong>10 মিনিট</strong> পর্যন্ত valid থাকবে।
+                    </p>
+
+                    <p>
+                        আপনি যদি password reset request না করে থাকেন,
+                        তাহলে এই email ignore করুন।
+                    </p>
+                </div>
+            `
+        })
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Brevo API Error (${response.status}): ${errorText}`);
+    }
+
+    return response.json();
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Render নিজে PORT ঠিক করে দেয়, তাই env থেকে নেওয়া হচ্ছে
@@ -190,7 +239,7 @@ app.post("/forgot-password", (req, res) => {
             if (result.length === 0) {
                 return res.json({
                     success: false,
-                    message: "এই email দিয়ে কোনো account পাওয়া যায়নি"
+                    message: "এই email দিয়ে কোনো account পাওয়া যায়নি"
                 });
             }
 
@@ -214,7 +263,7 @@ app.post("/forgot-password", (req, res) => {
 
                         return res.json({
                             success: false,
-                            message: "OTP তৈরি করতে সমস্যা হয়েছে"
+                            message: "OTP তৈরি করতে সমস্যা হয়েছে"
                         });
                     }
 
@@ -229,46 +278,17 @@ app.post("/forgot-password", (req, res) => {
 
                                 return res.json({
                                     success: false,
-                                    message: "OTP save করতে সমস্যা হয়েছে"
+                                    message: "OTP save করতে সমস্যা হয়েছে"
                                 });
                             }
 
                             try {
 
-                                await mailTransporter.sendMail({
-                                    from: `"আমাদের বাজার" <${process.env.EMAIL_USER}>`,
-                                    to: cleanEmail,
-                                    subject: "আমাদের বাজার - Password Reset OTP",
-                                    html: `
-                                        <div style="font-family: Arial, sans-serif; padding: 20px;">
-                                            <h2>আমাদের বাজার</h2>
-
-                                            <p>আপনার password reset করার জন্য OTP:</p>
-
-                                            <div style="
-                                                font-size: 32px;
-                                                font-weight: bold;
-                                                letter-spacing: 8px;
-                                                margin: 20px 0;
-                                            ">
-                                                ${otp}
-                                            </div>
-
-                                            <p>
-                                                এই OTP <strong>10 মিনিট</strong> পর্যন্ত valid থাকবে।
-                                            </p>
-
-                                            <p>
-                                                আপনি যদি password reset request না করে থাকেন,
-                                                তাহলে এই email ignore করুন।
-                                            </p>
-                                        </div>
-                                    `
-                                });
+                                await sendOtpEmail(cleanEmail, otp);
 
                                 res.json({
                                     success: true,
-                                    message: "OTP আপনার email-এ পাঠানো হয়েছে"
+                                    message: "OTP আপনার email-এ পাঠানো হয়েছে"
                                 });
 
                             } catch (emailError) {
@@ -283,7 +303,7 @@ app.post("/forgot-password", (req, res) => {
 
                                 res.json({
                                     success: false,
-                                    message: "Email পাঠানো যায়নি"
+                                    message: "Email পাঠানো যায়নি"
                                 });
                             }
                         }
@@ -336,7 +356,7 @@ app.post("/reset-password", (req, res) => {
             if (result.length === 0) {
                 return res.json({
                     success: false,
-                    message: "OTP পাওয়া যায়নি অথবা নতুন OTP নিন"
+                    message: "OTP পাওয়া যায়নি অথবা নতুন OTP নিন"
                 });
             }
 
@@ -352,9 +372,10 @@ app.post("/reset-password", (req, res) => {
 
                 return res.json({
                     success: false,
-                    message: "OTP-এর সময় শেষ হয়ে গেছে"
+                    message: "OTP-এর সময় শেষ হয়ে গেছে"
                 });
             }
+           
 
             // OTP check
             const otpMatch = await bcrypt.compare(
@@ -383,11 +404,11 @@ app.post("/reset-password", (req, res) => {
 
                         return res.json({
                             success: false,
-                            message: "Password update করতে সমস্যা হয়েছে"
+                            message: "Password update করতে সমস্যা হয়েছে"
                         });
                     }
 
-                    // OTP একবার ব্যবহার হওয়ার পর delete
+                    // OTP একবার ব্যবহার হওয়ার পর delete
                     db.query(
                         "DELETE FROM password_resets WHERE email = ?",
                         [cleanEmail]
