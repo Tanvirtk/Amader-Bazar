@@ -353,6 +353,165 @@ footer{
   font-size:13px;
   border-top:1px solid var(--line);
 }
+/* আপনার আগের সব CSS */
+
+
+/* ================= PROFILE ================= */
+
+.profile-container {
+  position: relative;
+}
+
+.profile-btn {
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 250px;
+  background: #ffffff;
+
+  border-radius: 16px;
+  padding: 22px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  display: none;
+  z-index: 9999;
+
+  text-align: center;
+}
+
+.profile-dropdown.show {
+  display: block;
+}
+
+.profile-logo {
+  width: 65px;
+  height: 65px;
+
+  margin: 0 auto 12px;
+
+  border-radius: 50%;
+
+  background: #f1f5f9;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32px;
+}
+
+.profile-dropdown h3 {
+  margin: 5px 0;
+  font-size: 19px;
+}
+
+.profile-dropdown p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #777;
+  word-break: break-word;
+}
+
+.profile-divider {
+  height: 1px;
+  background: #eeeeee;
+  margin: 18px 0;
+}
+
+.profile-logout {
+  width: 100%;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-logout:hover {
+  background: #eeeeee;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width:640px){
+
+  .header-row{
+    padding:12px 16px;
+    flex-wrap:wrap;
+  }
+
+  .brand{
+    font-size:21px;
+  }
+
+  .search-wrap{
+    order:3;
+    width:100%;
+    min-width:0;
+  }
+
+  .header-actions{
+    gap:8px;
+  }
+
+  .page-title h1{
+    font-size:24px;
+  }
+
+
+  /* ===== Mobile Profile ===== */
+
+  .profile-container{
+    position:relative;
+  }
+
+  .profile-dropdown{
+    position:fixed;
+
+    top:72px;
+    right:12px;
+    left:auto;
+
+    width:calc(100vw - 24px);
+    max-width:280px;
+
+    padding:20px;
+
+    border-radius:16px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.18);
+
+    z-index:99999;
+  }
+
+  .profile-logo{
+    width:60px;
+    height:60px;
+    font-size:29px;
+  }
+
+  .profile-dropdown h3{
+    font-size:18px;
+  }
+
+  .profile-dropdown p{
+    font-size:13px;
+  }
+
+  .profile-logout{
+    padding:11px;
+    font-size:14px;
+  }
+
+}
 
 @media (max-width:640px){
   .header-row{ padding:12px 16px; flex-wrap:wrap; }
