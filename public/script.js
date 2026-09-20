@@ -1,10 +1,4 @@
-/* =======================================================
-   PRODUCT DATA
-   img: গুগল থেকে নেওয়া ইমেজ লিংক বসান এভাবে।
-   ভবিষ্যতে নতুন প্রোডাক্ট যোগ করতে চাইলে এই array-তে যত খুশি
-   object যোগ করুন (যেকোনো category-র জন্য, যেমন "মুদি"-তে
-   একসাথে অনেক প্রোডাক্ট রাখা যাবে) — পেজে অটোমেটিক দেখাবে।
-======================================================= */
+
 const products = [
   { img:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&q=80", name:"আপেল", category:"ফল", price:"৳250 / kg", market:"Fruit Market" },
   { img:"https://images.unsplash.com/photo-1574226516831-e1dff420e562?w=400&q=80", name:"কলা", category:"ফল", price:"৳80 / dozen", market:"Fruit Market" },
@@ -506,6 +500,48 @@ async function checkSessionOnLoad(){
     console.error('Session check error:', err);
   }
 }
+// ================= PROFILE =================
+
+const profileBtn = document.getElementById('profile-btn');
+const profileDropdown = document.getElementById('profile-dropdown');
+
+profileBtn.addEventListener('click', async (e) => {
+  e.stopPropagation();
+
+  profileDropdown.classList.toggle('show');
+
+  // Profile open হলে user information load হবে
+  if (profileDropdown.classList.contains('show')) {
+
+    try {
+      const res = await fetch('/profile');
+
+      if (!res.ok) {
+        throw new Error('Profile load failed');
+      }
+
+      const user = await res.json();
+
+      document.getElementById('profile-name').textContent = user.name;
+      document.getElementById('profile-email').textContent = user.email;
+
+    } catch (err) {
+      console.error('Profile error:', err);
+    }
+  }
+});
+
+
+// বাইরে click করলে profile বন্ধ হবে
+document.addEventListener('click', (e) => {
+
+  if (!profileDropdown.contains(e.target) &&
+      !profileBtn.contains(e.target)) {
+
+    profileDropdown.classList.remove('show');
+  }
+
+});
 checkSessionOnLoad();
  
 /* ===== Init ===== */
