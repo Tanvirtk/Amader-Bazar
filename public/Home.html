@@ -25,19 +25,51 @@
       <span aria-hidden="true">🔍</span>
       <input id="search-input" type="text" placeholder="পণ্য খুঁজুন...">
     </div>
+<div class="header-actions">
 
-    <div class="header-actions">
-      <button class="icon-btn cart" id="open-cart-btn">
-        <span aria-hidden="true">🛒</span><span class="label">কার্ট</span>
-        <span class="cart-badge" id="cart-badge">0</span>
+  <!-- Cart -->
+  <button class="icon-btn cart" id="open-cart-btn">
+    <span aria-hidden="true">🛒</span>
+    <span class="label">কার্ট</span>
+    <span class="cart-badge" id="cart-badge">0</span>
+  </button>
+
+  <!-- Complaint -->
+  <button class="icon-btn report" id="open-complaint-btn">
+    <span aria-hidden="true">⚠️</span>
+    <span class="label">অভিযোগ</span>
+  </button>
+
+  <!-- Profile -->
+  <div class="profile-container">
+
+    <button class="icon-btn profile-btn" id="profile-btn">
+      <span aria-hidden="true">👤</span>
+      <span class="label">প্রোফাইল</span>
+    </button>
+
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" id="profile-dropdown">
+
+      <div class="profile-logo">
+        👤
+      </div>
+
+      <h3 id="profile-name">নাম</h3>
+
+      <p id="profile-email">email@example.com</p>
+
+      <div class="profile-divider"></div>
+
+      <button class="profile-logout" id="logout-btn">
+        🚪 লগআউট
       </button>
-      <button class="icon-btn report" id="open-complaint-btn">
-        <span aria-hidden="true">⚠️</span><span class="label">অভিযোগ</span>
-      </button>
-      <button class="icon-btn logout" id="logout-btn">
-        <span aria-hidden="true">🚪</span><span class="label">লগআউট</span>
-      </button>
+
     </div>
+
+  </div>
+
+</div>
   </div>
 </header>
 
