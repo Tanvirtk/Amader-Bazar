@@ -178,7 +178,7 @@ function renderProducts(){
         <div class="card-market">${p.market}</div>
         <div class="card-footer">
           <span class="card-price mono">${p.price}</span>
-          <button class="card-btn" onclick='addToCart(${JSON.stringify(p)})'>কার্টে যোগ করুন</button>
+          <button class="card-btn" onclick='addToCart(${JSON.stringify(p)})'>কার্টে যোগ</button>
         </div>
       </div>
     </article>
@@ -337,7 +337,7 @@ function addToCart(product){
     cart.push({ ...product, quantity: 1 });
   }
   saveCart();
-  showToast(`🛒 ${product.name} কার্টে যোগ হয়েছে`);
+  showToast(`🛒 ${product.name} কার্টে যোগ হয়েছে,অর্ডার করতে উপরের কার্টে চাপুন।`);
 }
  
 function removeFromCart(index){
