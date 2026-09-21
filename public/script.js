@@ -367,34 +367,104 @@ cartModalOverlay.addEventListener('click', (e)=>{
 });
  
 function renderCartModal(){
+
   const wrap = document.getElementById('cart-items-wrap');
   const emptyMsg = document.getElementById('cart-empty-msg');
   const checkoutBtn = document.getElementById('checkout-btn');
- 
+  const totalPriceEl = document.getElementById('cart-total-price');
+
+
   if(cart.length === 0){
+
     wrap.innerHTML = '';
+
     emptyMsg.style.display = 'block';
+
     checkoutBtn.style.display = 'none';
+
+    totalPriceEl.textContent = '৳0';
+
     return;
   }
+
+
   emptyMsg.style.display = 'none';
+
   checkoutBtn.style.display = 'block';
- 
+
+
+  // Total Price Calculate
+  const totalPrice = cart.reduce((total, item) => {
+
+    const price = parseFloat(
+      String(item.price).replace(/[^\d.]/g, '')
+    );
+
+    return total + (price * item.quantity);
+
+  }, 0);
+
+
+  // Total Price Show
+  totalPriceEl.textContent =
+    `৳${totalPrice.toLocaleString('bn-BD')}`;
+
+
+  // Cart Items Show
   wrap.innerHTML = cart.map((item, i) => `
+
     <div class="cart-item">
-      <img src="${item.img}" alt="${item.name}" onerror="this.src='https://placehold.co/60x60/1F5D50/FBF3E4?text=+'">
+
+      <img
+        src="${item.img}"
+        alt="${item.name}"
+        onerror="this.src='https://placehold.co/60x60/1F5D50/FBF3E4?text=+'"
+      >
+
       <div class="cart-item-info">
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-meta">${item.price} • ${item.market}</div>
+
+        <div class="cart-item-name">
+          ${item.name}
+        </div>
+
+        <div class="cart-item-meta">
+          ${item.price} • ${item.market}
+        </div>
+
       </div>
+
       <div class="cart-item-qty">
-        <button type="button" onclick="changeCartQty(${i}, -1)">−</button>
+
+        <button
+          type="button"
+          onclick="changeCartQty(${i}, -1)"
+        >
+          −
+        </button>
+
         <span>${item.quantity}</span>
-        <button type="button" onclick="changeCartQty(${i}, 1)">+</button>
+
+        <button
+          type="button"
+          onclick="changeCartQty(${i}, 1)"
+        >
+          +
+        </button>
+
       </div>
-      <button type="button" class="cart-item-remove" onclick="removeFromCart(${i})">✕</button>
+
+      <button
+        type="button"
+        class="cart-item-remove"
+        onclick="removeFromCart(${i})"
+      >
+        ✕
+      </button>
+
     </div>
+
   `).join('');
+
 }
  
 /* ===== চেকআউট (কার্ট থেকে ডেলিভারি ফর্মে যাওয়া) ===== */
